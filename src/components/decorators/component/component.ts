@@ -9,8 +9,18 @@ export function Component(config: IComponent) {
                 super(...args);
 
                 const element = document.querySelector(config.selector);
-                if (element) element.innerHTML = config.template;
+                if (element) element.innerHTML = getParsedTemplate(config.template, this);
             }
         }
+    };
+
+    function getParsedTemplate(template: string, self: any): string {
+        for(let property in self) {
+            const regex: RegExp = new RegExp('{{' + property + '}}', 'g');
+
+            template = template.replace(regex, self[property]);
+        }
+
+        return template;
     }
 }
